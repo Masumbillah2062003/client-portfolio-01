@@ -1,8 +1,13 @@
 import { Card, Input, Checkbox, Typography } from "@material-tailwind/react";
 import { useForm } from "react-hook-form";
 import AuthenticationVideo from "../../Component/AuthenticationVideo";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../Provider/AuthProvider";
 const Login = () => {
+  const { logInUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -10,12 +15,25 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
+    logInUser(data.email, data.password)
+      .then((userCredential) => {
+        if (userCredential) {
+          alert("your sign up successfull");
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+      });
   };
   return (
-    <div className="flex justify-center items-center h-screen relative">
-      <AuthenticationVideo></AuthenticationVideo>
-      <div className="absolute border-white z-50 p-5 border-2 rounded-md backdrop-blur-lg">
+    <div className="flex justify-center items-center h-auto relative">
+      <div className="">
+        <AuthenticationVideo></AuthenticationVideo>
+      </div>
+      <div className="absolute border-white flex justify-center items-center h-auto p-5 border-2 rounded-md backdrop-blur-lg">
         <Card
           color="transparent"
           shadow={false}

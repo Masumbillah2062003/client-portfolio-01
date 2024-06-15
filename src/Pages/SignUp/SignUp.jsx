@@ -1,13 +1,9 @@
 import { Link } from "react-router-dom";
 import AuthenticationVideo from "../../Component/AuthenticationVideo";
-import {
-  Card,
-  Input,
-  Checkbox,
-
-  Typography,
-} from "@material-tailwind/react";
+import { Card, Input, Checkbox, Typography } from "@material-tailwind/react";
 import { useForm } from "react-hook-form";
+import { useContext } from "react";
+import { AuthContext } from "../../Provider/AuthProvider";
 
 const SignUp = () => {
   const {
@@ -16,13 +12,26 @@ const SignUp = () => {
     formState: { errors },
   } = useForm();
 
+  const { createUser } = useContext(AuthContext);
+  console.log(createUser);
+
   const onSubmit = (data) => {
-    console.log(data);
+    createUser(data.email, data.password)
+      .then((userCredential) => {
+        if(userCredential){
+          alert("your sign up successfull")
+        }
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+      });
   };
   return (
-    <div className="flex justify-center items-center h-screen relative">
+    <div className="flex justify-center items-center relative">
       <AuthenticationVideo></AuthenticationVideo>
-      <div className="absolute border-white z-50 p-5 border-2 rounded-md backdrop-blur-lg">
+      <div className="absolute border-white flex justify-center items-center p-5 border-2 rounded-md backdrop-blur-lg">
         <Card
           color="transparent"
           shadow={false}
@@ -43,69 +52,75 @@ const SignUp = () => {
                 Your Name
               </Typography>
               <div className="relative">
-              <Input
-                label="Username"
-                color="white"
-                type="text"
-                {...register("name", { required: true })}
-              />{" "}
-              {errors.name && (
-                <span className="text-yellow-700 absolute">This field is required</span>
-              )}
+                <Input
+                  label="Username"
+                  color="pink"
+                  className="text-white"
+                  type="text"
+                  {...register("name", { required: true })}
+                />{" "}
+                {errors.name && (
+                  <span className="text-yellow-700 absolute">
+                    This field is required
+                  </span>
+                )}
               </div>
               <Typography variant="h6" color="white" className="-mb-3">
                 Your Email
               </Typography>
               <div className="relative">
-              <Input
-                label="Email"
-                color="white"
-                type="email"
-                {...register("email", { required: true })}
-              />{" "}
-              {errors.email && (
-                <span className="text-yellow-700 absolute">This field is required</span>
-              )}
+                <Input
+                  label="Email"
+                  className="text-white"
+                  color="pink"
+                  type="email"
+                  {...register("email", { required: true })}
+                />{" "}
+                {errors.email && (
+                  <span className="text-yellow-700 absolute">
+                    This field is required
+                  </span>
+                )}
               </div>
               <Typography variant="h6" color="white" className="-mb-3">
                 Password
               </Typography>
               <div className="relative">
-              <Input
-                label="Password"
-                color="white"
-                type="password"
-                {...register("password", { required: true })}
-              />{" "}
-              {errors.password && (
-                <span className="text-yellow-700 absolute">This field is required</span>
-              )}
+                <Input
+                  label="Password"
+                  className="text-white"
+                  color="pink"
+                  type="password"
+                  {...register("password", { required: true })}
+                />{" "}
+                {errors.password && (
+                  <span className="text-yellow-700 absolute">
+                    This field is required
+                  </span>
+                )}
               </div>
             </div>
             <div className="mt-7">
-            <Checkbox
-              label={
-                <Typography
-                  variant="small"
-                  color="white"
-                  className="flex items-center font-normal"
-                >
-                  I agree the
-                  <a
-                    href="#"
-                    className="font-medium transition-colors hover:text-white-900"
+              <Checkbox
+                label={
+                  <Typography
+                    variant="small"
+                    color="white"
+                    className="flex items-center font-normal"
                   >
-                    &nbsp;Terms and Conditions
-                  </a>
-                </Typography>
-              }
-              containerProps={{ className: "-ml-2.5" }}
-            />
+                    I agree the
+                    <a
+                      href="#"
+                      className="font-medium transition-colors hover:text-white-900"
+                    >
+                      &nbsp;Terms and Conditions
+                    </a>
+                  </Typography>
+                }
+                containerProps={{ className: "-ml-2.5" }}
+              />
             </div>
-            <button
-              className="mt-4 w-full bg-pink-600 rounded-lg text-white py-2 font-bold text-xl border-2 border-white"
-             
-            >
+            <button className="mt-4 w-full bg-pink-600 rounded-lg text-white py-2 font-bold text-xl border-2 border-white">
               sign up
             </button>
             <Typography color="white" className="mt-4 text-center font-normal">
